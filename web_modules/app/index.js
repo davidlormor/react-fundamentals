@@ -2,10 +2,33 @@ import React, { Component, PropTypes } from 'react'
 import { render } from 'react-dom'
 
 class App extends Component {
-  render () {
-    const { txt, cat } = this.props
+  constructor () {
+    super()
+    this.state = {
+      txt: 'the number is: ',
+      cat: 0
+    }
+  }
 
-    return <h1>{txt}{cat}</h1>
+  updateTxt (e) {
+    this.setState({ txt: e.target.value })
+  }
+
+  updateCat (e) {
+    this.setState({ cat: e.target.value })
+  }
+
+  render () {
+    const { txt, cat } = this.state
+
+    return (
+      <div>
+        <input type='text' onChange={this.updateTxt.bind(this)} value={txt} />
+        <br />
+        <input type='number' onChange={this.updateCat.bind(this)} value={cat} />
+        <h1>{txt} {cat}</h1>
+      </div>
+    )
   }
 }
 
