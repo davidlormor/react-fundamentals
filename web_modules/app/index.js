@@ -1,55 +1,58 @@
 import React, { Component } from 'react'
-import { render, unmountComponentAtNode } from 'react-dom'
 
 class App extends Component {
   constructor () {
     super()
-    this.state = { val: 0, m: 2 }
-    this.update = this.update.bind(this)
+    this.state = { val: 0 }
+    this.increase = this.increase.bind(this)
+    this.decrease = this.decrease.bind(this)
   }
 
-  componentDidMount () {
-    this.inc = setInterval(this.update, 500)
-  }
-
-  componentWillUnmount () {
-    clearInterval(this.inc)
-  }
-
-  update () {
+  increase () {
     this.setState({ val: this.state.val + 1 })
   }
 
-  render () {
-    const { m, val } = this.state
-
-    return <h1>{val * m}</h1>
-  }
-}
-
-class Wrapper extends Component {
-  constructor () {
-    super()
-    this.mount = this.mount.bind(this)
-    this.unmount = this.unmount.bind(this)
-  }
-  mount () {
-    render(<App />, document.getElementById('mount-point'))
-  }
-
-  unmount () {
-    unmountComponentAtNode(document.getElementById('mount-point'))
+  decrease () {
+    this.setState({ val: this.state.val - 1 })
   }
 
   render () {
+    const { val } = this.state
+
     return (
       <div>
-        <button onClick={this.mount}>Mount</button>
-        <button onClick={this.unmount}>Unmount</button>
-        <div id='mount-point'></div>
+        <Counter value={val} />
+        <button onClick={this.increase}>+</button>
+        <button onClick={this.decrease}>-</button>
       </div>
     )
   }
 }
 
-export default Wrapper
+class Counter extends Component {
+  constructor () {
+    super()
+    this.state = { increasing: false }
+  }
+
+  componentWillReceiveProps (nextProps) {
+    this.setState({ increasing: nextProps.value > this.props.value })
+  }
+
+  shouldComponentUpdate (nextProps, nextState) {
+    return nextProps.value % 5 === 0
+  }
+
+  componentDidUpdate (prevProps, prevState) {
+    console.log('prevProps', prevProps)
+  }
+
+  render () {
+    const { value } = this.props
+    const { increasing } = this.state
+
+    return <h1>Count: {value} <small>({increasing ? 'Increasing' : 'Decreasing'})</small></h1>
+  }
+}
+
+export default App
