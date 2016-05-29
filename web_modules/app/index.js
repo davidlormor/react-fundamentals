@@ -5,6 +5,7 @@ class App extends Component {
   constructor () {
     super()
     this.state = { txt: 'txt' }
+    this.update = this.update.bind(this)
   }
 
   update (e) {
@@ -16,11 +17,23 @@ class App extends Component {
 
     return (
       <div>
-        <input type='text' value={txt} onChange={this.update.bind(this)} />
-        <h1>{txt}</h1>
+        <Widget txt={txt} update={this.update} />
+        <Widget txt={txt} update={this.update} />
+        <Widget txt={txt} update={this.update} />
       </div>
     )
   }
+}
+
+const Widget = (props) => {
+  const { txt, update } = props
+
+  return (
+    <div>
+      <input type='text' value={txt} onChange={update} />
+      <h1>{txt}</h1>
+    </div>
+  )
 }
 
 render(
