@@ -1,39 +1,52 @@
 import React, { Component } from 'react'
-import { render } from 'react-dom'
+import { findDOMNode, render } from 'react-dom'
 
 class App extends Component {
   constructor () {
     super()
-    this.state = { txt: 'txt' }
+    this.state = {
+      red: 0,
+      green: 0,
+      blue: 0
+    }
     this.update = this.update.bind(this)
   }
 
   update (e) {
-    this.setState({ txt: e.target.value })
+    const { red, green, blue } = this.refs
+
+    this.setState({
+      red: findDOMNode(red).value,
+      green: findDOMNode(green).value,
+      blue: findDOMNode(blue).value
+    })
   }
 
   render () {
-    const { txt } = this.state
+    const { red, green, blue } = this.state
 
     return (
       <div>
-        <Widget txt={txt} update={this.update} />
-        <Widget txt={txt} update={this.update} />
-        <Widget txt={txt} update={this.update} />
+        <h1>Red</h1>
+        <Slider ref='red' value={red} update={this.update} />
+        {red}
+        <h1>Green</h1>
+        <Slider ref='green' value={green} update={this.update} />
+        {green}
+        <h1>Blue</h1>
+        <Slider ref='blue' value={blue} update={this.update} />
+        {blue}
       </div>
     )
   }
 }
 
-const Widget = (props) => {
-  const { txt, update } = props
+class Slider extends Component {
+  render () {
+    const { update, value } = this.props
 
-  return (
-    <div>
-      <input type='text' value={txt} onChange={update} />
-      <h1>{txt}</h1>
-    </div>
-  )
+    return <input type='range' min={0} max={255} value={value} onChange={update} />
+  }
 }
 
 render(
