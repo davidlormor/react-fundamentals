@@ -4,32 +4,26 @@ import { render, unmountComponentAtNode } from 'react-dom'
 class App extends Component {
   constructor () {
     super()
-    this.state = { val: 0 }
+    this.state = { val: 0, m: 2 }
     this.update = this.update.bind(this)
   }
 
-  componentWillMount () {
-    console.log('mounting')
-  }
-
   componentDidMount () {
-    console.log('mounted')
+    this.inc = setInterval(this.update, 500)
   }
 
   componentWillUnmount () {
-    console.log('unmounting')
+    clearInterval(this.inc)
   }
 
   update () {
-    console.log('updating')
-
     this.setState({ val: this.state.val + 1 })
   }
 
   render () {
-    console.log('rendering')
+    const { m, val } = this.state
 
-    return <button onClick={this.update}>{this.state.val}</button>
+    return <h1>{val * m}</h1>
   }
 }
 
@@ -40,11 +34,11 @@ class Wrapper extends Component {
     this.unmount = this.unmount.bind(this)
   }
   mount () {
-    render(<App />, document.getElementById('a'))
+    render(<App />, document.getElementById('mount-point'))
   }
 
   unmount () {
-    unmountComponentAtNode(document.getElementById('a'))
+    unmountComponentAtNode(document.getElementById('mount-point'))
   }
 
   render () {
@@ -52,13 +46,10 @@ class Wrapper extends Component {
       <div>
         <button onClick={this.mount}>Mount</button>
         <button onClick={this.unmount}>Unmount</button>
-        <div id='a'></div>
+        <div id='mount-point'></div>
       </div>
     )
   }
 }
 
-render(
-  <Wrapper />,
-  document.getElementById('app')
-)
+export default Wrapper
