@@ -1,30 +1,46 @@
 import React, { Component } from 'react'
+import { transform } from 'babel-standalone'
+import './styles.css'
 
 class App extends Component {
   constructor () {
     super()
     this.state = {
-      people: [
-        {id: 1, name: 'David'},
-        {id: 2, name: 'Jordan'},
-        {id: 3, name: 'Renick'},
-        {id: 4, name: 'Galilee'},
-        {id: 5, name: 'Magdalene'}
-      ]
+      input: '/* add your jsx here */',
+      output: '',
+      error: ''
+    }
+    this.update = this.update.bind(this)
+  }
+
+  update (e) {
+    const code = e.target.value
+
+    try {
+      this.setState({
+        output: transform(code, {
+          presets: ['es2015-loose', 'react', 'stage-0']
+        }).code,
+        error: ''
+      })
+    } catch (err) {
+      this.setState({ error: err.message })
     }
   }
 
   render () {
-    const people = this.state.people.map((person) => {
-      return <Person key={person.id} person={person} />
-    })
+    const { input, output, error } = this.state
 
-    return <div>{people}</div>
+    return (
+      <div>
+        <header>{error}</header>
+        <div className='container'>
+          <textarea defaultValue={input} onChange={this.update}></textarea>
+          <pre>{output}</pre>
+        </div>
+      </div>
+    )
   }
-}
-
-const Person = ({ person: { id, name } }) => {
-  return <div>{id}. {name}</div>
 }
 
 export default App
